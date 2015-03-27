@@ -33,19 +33,4 @@ class Handler extends BaseExtension implements ServiceIf
     {
         // TODO: Implement create() method.
     }
-
-    public function ping()
-    {
-        // TODO: Implement ping() method.
-    }
-
-    public function getList($id)
-    {
-        // TODO: Implement getList() method.
-    }
-
-    public function create(\AppBundle\ThriftModel\Test $test)
-    {
-        // TODO: Implement create() method.
-    }
 }
