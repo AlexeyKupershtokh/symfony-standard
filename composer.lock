@@ -4,14 +4,14 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "666c0d935d41e4f4c9551f640986b4f9",
+    "hash": "f2bb612d85c4dbd5756a7fc25a6564c7",
     "packages": [
         {
             "name": "apache/thrift",
             "version": "0.9.2",
             "source": {
                 "type": "git",
-                "url": "https://git-wip-us.apache.org/repos/asf/thrift.git",
+                "url": "https://github.com/apache/thrift.git",
                 "reference": "591e20f9636c37527a70dc03598218c3468a0eff"
             },
             "dist": {

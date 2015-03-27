@@ -59,5 +59,11 @@
         "branch-alias": {
             "dev-master": "2.7-dev"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/apache/thrift.git"
+        }
+    ]
 }
