@@ -1,3 +1,21 @@
+Thrift integration
+==================
+
+Recompile thrift classes
+```
+app/console thrift:compile --server --path=/usr/bin/ --bundleNameOut=AppBundle thrift
+```
+
+Run server:
+```
+app/console server:run
+```
+
+Test using console client
+```
+app/console thrift:client:test --host=127.0.0.1/thrift --port=8000 --mode=http thrift getList 1
+```
+
 Symfony Standard Edition
 ========================
 

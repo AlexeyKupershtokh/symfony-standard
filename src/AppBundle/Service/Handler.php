@@ -11,7 +11,6 @@ class Handler extends BaseExtension implements ServiceIf
      */
     public function ping()
     {
-        // TODO: Implement ping() method.
     }
 
     /**
@@ -21,7 +20,10 @@ class Handler extends BaseExtension implements ServiceIf
      */
     public function getList($id)
     {
-        // TODO: Implement getList() method.
+        return array(
+            new \AppBundle\ThriftModel\Test(array('id' => 1, 'content' => 'asd')),
+            new \AppBundle\ThriftModel\Test(array('id' => 2, 'content' => 'zxc'))
+        );
     }
 
     /**
