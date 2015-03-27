@@ -78,3 +78,31 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+overblog_thrift:
+    compiler:
+        path: /usr/bin/
+    services:
+        thrift:
+            definition: Service
+            namespace: AppBundle\ThriftModel
+            definitionPath: src/AppBundle/ThriftDefinition
+            server: true
+            protocol: \Thrift\Protocol\TJSONProtocol
+    servers:
+        thrift:
+            service: thrift
+            handler: thrift_api.processor.service
+    clients:
+        thrift:
+            service: thrift
+            type: http
+            hosts:
+                local8000:
+                    host: 127.0.0.1
+                    port: 8000
+
+services:
+    thrift_api.processor.service:
+        class: AppBundle\Service\Handler
+        arguments: [@service_container]
