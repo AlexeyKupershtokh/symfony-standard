@@ -18,6 +18,12 @@ use Thrift\Exception\TApplicationException;
 
 interface ServiceIf {
   /**
+   * @param int $a
+   * @param int $b
+   * @return int
+   */
+  public function add($a, $b);
+  /**
    */
   public function ping();
   /**
@@ -49,6 +55,58 @@ class ServiceClient implements \AppBundle\ThriftModel\ServiceIf {
   public function __construct($input, $output=null) {
     $this->input_ = $input;
     $this->output_ = $output ? $output : $input;
+  }
+
+  public function add($a, $b)
+  {
+    $this->send_add($a, $b);
+    return $this->recv_add();
+  }
+
+  public function send_add($a, $b)
+  {
+    $args = new \AppBundle\ThriftModel\Service_add_args();
+    $args->a = $a;
+    $args->b = $b;
+    $bin_accel = ($this->output_ instanceof TBinaryProtocolAccelerated) && function_exists('thrift_protocol_write_binary');
+    if ($bin_accel)
+    {
+      thrift_protocol_write_binary($this->output_, 'add', TMessageType::CALL, $args, $this->seqid_, $this->output_->isStrictWrite());
+    }
+    else
+    {
+      $this->output_->writeMessageBegin('add', TMessageType::CALL, $this->seqid_);
+      $args->write($this->output_);
+      $this->output_->writeMessageEnd();
+      $this->output_->getTransport()->flush();
+    }
+  }
+
+  public function recv_add()
+  {
+    $bin_accel = ($this->input_ instanceof TBinaryProtocolAccelerated) && function_exists('thrift_protocol_read_binary');
+    if ($bin_accel) $result = thrift_protocol_read_binary($this->input_, '\AppBundle\ThriftModel\Service_add_result', $this->input_->isStrictRead());
+    else
+    {
+      $rseqid = 0;
+      $fname = null;
+      $mtype = 0;
+
+      $this->input_->readMessageBegin($fname, $mtype, $rseqid);
+      if ($mtype == TMessageType::EXCEPTION) {
+        $x = new TApplicationException();
+        $x->read($this->input_);
+        $this->input_->readMessageEnd();
+        throw $x;
+      }
+      $result = new \AppBundle\ThriftModel\Service_add_result();
+      $result->read($this->input_);
+      $this->input_->readMessageEnd();
+    }
+    if ($result->success !== null) {
+      return $result->success;
+    }
+    throw new \Exception("add failed: unknown result");
   }
 
   public function ping()
@@ -263,6 +321,88 @@ class ServiceClient implements \AppBundle\ThriftModel\ServiceIf {
 }
 
 // HELPER FUNCTIONS AND STRUCTURES
+
+class Service_add_args extends TBase {
+  static $_TSPEC;
+
+  /**
+   * @var int
+   */
+  public $a = null;
+  /**
+   * @var int
+   */
+  public $b = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        1 => array(
+          'var' => 'a',
+          'type' => TType::I32,
+          ),
+        2 => array(
+          'var' => 'b',
+          'type' => TType::I32,
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      parent::__construct(self::$_TSPEC, $vals);
+    }
+  }
+
+  public function getName() {
+    return 'Service_add_args';
+  }
+
+  public function read($input)
+  {
+    return $this->_read('Service_add_args', self::$_TSPEC, $input);
+  }
+
+  public function write($output) {
+    return $this->_write('Service_add_args', self::$_TSPEC, $output);
+  }
+
+}
+
+class Service_add_result extends TBase {
+  static $_TSPEC;
+
+  /**
+   * @var int
+   */
+  public $success = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        0 => array(
+          'var' => 'success',
+          'type' => TType::I32,
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      parent::__construct(self::$_TSPEC, $vals);
+    }
+  }
+
+  public function getName() {
+    return 'Service_add_result';
+  }
+
+  public function read($input)
+  {
+    return $this->_read('Service_add_result', self::$_TSPEC, $input);
+  }
+
+  public function write($output) {
+    return $this->_write('Service_add_result', self::$_TSPEC, $output);
+  }
+
+}
 
 class Service_ping_args extends TBase {
   static $_TSPEC;
@@ -599,6 +739,25 @@ class ServiceProcessor {
     return true;
   }
 
+  protected function process_add($seqid, $input, $output) {
+    $args = new \AppBundle\ThriftModel\Service_add_args();
+    $args->read($input);
+    $input->readMessageEnd();
+    $result = new \AppBundle\ThriftModel\Service_add_result();
+    $result->success = $this->handler_->add($args->a, $args->b);
+    $bin_accel = ($output instanceof TBinaryProtocolAccelerated) && function_exists('thrift_protocol_write_binary');
+    if ($bin_accel)
+    {
+      thrift_protocol_write_binary($output, 'add', TMessageType::REPLY, $result, $seqid, $output->isStrictWrite());
+    }
+    else
+    {
+      $output->writeMessageBegin('add', TMessageType::REPLY, $seqid);
+      $result->write($output);
+      $output->writeMessageEnd();
+      $output->getTransport()->flush();
+    }
+  }
   protected function process_ping($seqid, $input, $output) {
     $args = new \AppBundle\ThriftModel\Service_ping_args();
     $args->read($input);

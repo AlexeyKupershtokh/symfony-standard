@@ -35,4 +35,14 @@ class Handler extends BaseExtension implements ServiceIf
     {
         // TODO: Implement create() method.
     }
+
+    /**
+     * @param int $a
+     * @param int $b
+     * @return int
+     */
+    public function add($a, $b)
+    {
+        return $a + $b;
+    }
 }

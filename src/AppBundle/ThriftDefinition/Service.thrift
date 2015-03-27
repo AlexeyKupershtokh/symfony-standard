@@ -16,6 +16,7 @@ exception InvalidValueException {
 }
 
 service Service {
+    i32 add(1: i32 a, 2: i32 b),
     void ping(),
     Test get(1: i32 id) throws (1: InvalidValueException e),
     list<Test> getList(1: i32 id) throws (1: InvalidValueException e),
